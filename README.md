@@ -1,3 +1,74 @@
+Assignment A5
+
+ Wall squeeze CG Group 14 
+ https://youtu.be/J2vI5Q-txbw 
+ 
+ Plane ingress CG Group 14
+ https://youtu.be/9qO_MUMFOpU 
+ 
+ Hallway four way rounded roundabout CG Group 14 
+ https://youtu.be/fwh1C3knhEU 
+ 
+ Double squeeze CG Group 14 
+ https://youtu.be/34lVXvQEG2k
+ 
+bottleneck squeeze CG Group 14 
+https://youtu.be/kbqUvrYE1rA 
+
+office complex CG Group 14 
+https://youtu.be/4iIxO_zA3ms 
+
+maze CG Group 14
+https://youtu.be/yZ5s-hunnME 
+
+plane egress CG Group 14
+https://youtu.be/75xuuXNNBmg 
+
+doorway two way CG Group 14
+https://youtu.be/ZAhxFKZjubA 
+
+hallway two way CG Group 14
+https://youtu.be/6xyE49ldB9w 
+
+Crowd crossing CG Group 14 
+https://youtu.be/hiDJ5Dt19Bo
+
+self edited testcase Airport CG Group 14
+https://youtu.be/NdibtJ2kwZk
+
+To execute our simulation the command is
+./steersim –config Myconfig.xml –testcase testcasename –ai sfAI
+The idea of this complex crowd simulation is to combine social forces and A* pathfinder.
+The idea of pathfinder work with social forces has put the sequence of nodes that generate by A* into the waypoint and goal queue list, after reach, the current local goal, set the current local goal to the next goal in the waypoint and goal queue list. Sometimes, the agent will crack when it reach the corner of obstacles, so we need to recompute the path in four-way A*.
+
+We merge the A* pathfinder into our social forces AI
+
+In reset function push the sequence of the node that computer by A* into waypoints and mid term path and goalQueue list.
+
+In the updateAI we use "hasLineOfSightTo" function to check is there any obstacles between the agent current position and the current local goal. If there is an obstacle on the way to the local goal, recalculate the path with four-way A* algorithm. in addition, if the local goal is to far away from the current position, it will also recalculate the path.
+
+In most case the OBSTACLE_CLEARANCE = 0 In Maze test case, the agent size is bigger than another test case, so we increase the OBSTACLE_CLEARANCE = 2;
+
+In A* we decide to choice weight to 2 and also chose big G value and Manhattan distance.
+In the test case hallway-four-way-rounded-roundabout we have solved the polygon obstacles
+
+Implementation method:
+1. How to detect if polygon obstacle is in the agents' query area?
+Using GJK to detect if agent. Position + query radius colloid with polygon obstacle. If so, we start to compute the repulsion force between polygon obstacle and agents. else, do nothing.
+
+2. How to calculate the force between agents and polygon obstacle?
+If polygon obstacle is in the query area of agents, first, we get the nearest vertices in the polygon and split the angel of this vertices into two parts. Then we compare the vector from the vertices to the agent and the vector from vertices to its next vertices to determine which side of the vertices the agent is. Then we treat the face of the side of the polygon obstacle as the wall to calculate the repulsion force.
+
+In the office complex, we got a segmentation fault. The reason is in this test case the wide of the obstacle is so small so many agent cracks in the corner of the obstacles. So many recalculate path in this test case.
+
+We increase the goal force time 4. So it can reduce the bounce between agents.
+
+Our created test case is an airport simulation. Some plane is departing and some are arriving. And we also change the shape of agent and color. So it likes to look UFO. Please replace the DrawLib.cpp with our own DrawLib.cpp
+
+
+
+
+
 SteerLite
 ==========
 
